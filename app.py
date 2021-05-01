@@ -67,7 +67,7 @@ def getsalida():
             return Response("Hecho",content_type='application/x-www-form-urlencoded')
         else:
             mm=cadenaxml
-            
+            per=cadenaxml
             return Response(mm,content_type='application/x-www-form-urlencoded')
 
 
