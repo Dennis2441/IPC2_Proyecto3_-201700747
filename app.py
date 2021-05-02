@@ -9,6 +9,7 @@ from xml.dom.minidom import Node
 import os
 import re
 cadenaxml=[]
+hola=[]
 app= Flask(__name__)
 CORS(app, resources={r"/*": {"origin": "*"}})
 nomb=" "
