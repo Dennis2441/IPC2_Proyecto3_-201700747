@@ -52,6 +52,7 @@ def getsuma():
             return Response(mm,content_type='application/x-www-form-urlencoded')
         else:
             return Response("not hecho",content_type='application/x-www-form-urlencoded')
+  
     
 @app.route('/salida', methods=['POST','GET'])
 def getsalida():
