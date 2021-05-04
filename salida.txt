@@ -1,0 +1,37 @@
+<Estadisticas>
+  <Estadistica>
+    <FECHA>15/05/2017</FECHA>
+    <CANTIDAD_MENSAJES>1</CANTIDAD_MENSAJES>
+    <REPORTADO_POR>
+     <USUARIO>
+      <EMAIL>bbweew@ing.usac.edu.gt</EMAIL>
+      <CANTIDAD_MENSAJES>1</CANTIDAD_MENSAJES>
+     </USUARIO>
+    </AFECTADOS>
+     <AFECTADO>bb@ing.usac.edu.gt</AFECTADO>
+    </AFECTADOS>
+    </REPORTADO_POR>
+    <ERRORES>
+     <CODIGO>20001</CODIGO>
+     <CANTIDAD_MENSAJES>1</CANTIDAD_MENSAJES>
+    </ERRORES>
+  </Estadistica>
+  <Estadistica>
+    <FECHA>15/12/2017</FECHA>
+    <CANTIDAD_MENSAJES>2</CANTIDAD_MENSAJES>
+    <REPORTADO_POR>
+     <USUARIO>
+      <EMAIL>bb@ing.usac.edu.gt</EMAIL>
+      <CANTIDAD_MENSAJES>2</CANTIDAD_MENSAJES>
+     </USUARIO>
+    </AFECTADOS>
+     <AFECTADO>aa@ing.usac.edu.gt</AFECTADO>
+     <AFECTADO>bb@ing.usac.edu.gt</AFECTADO>
+    </AFECTADOS>
+    </REPORTADO_POR>
+    <ERRORES>
+     <CODIGO>20001</CODIGO>
+     <CANTIDAD_MENSAJES>2</CANTIDAD_MENSAJES>
+    </ERRORES>
+  </Estadistica>
+</Estadisticas>
