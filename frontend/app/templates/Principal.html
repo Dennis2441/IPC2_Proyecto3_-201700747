@@ -100,6 +100,7 @@
         width: 500px;
         resize: none; /* Remove this if you want the user to resize the textarea */
     }
+    
     .clearfix:after {
    content: " "; 
    visibility: hidden;
@@ -128,6 +129,22 @@
     float:left;
     width:50%;
 }
+.outer {
+    
+    margin:0 auto;
+    outline:2px solid black;
+    overflow-y: scroll;
+    height: 500px;
+    width: 600px;
+    resize: none; /* Remove this if you want the user to resize the textarea */
+}
+.content {
+    line-height:1.375;
+    white-space:pre-wrap;
+    padding:1em;
+}
+
+
         </style>
 </head>
 <body>
@@ -140,8 +157,8 @@
             </button>
             <div class="dropdown-content">
               <button id="dato">Datos</button>
-              <a href="#">Link 2</a>
-              <a href="#">Link 3</a>
+              <a href="fecha">Buscar por fecha y Usuario</a>
+              <a href="codigo">Buscar por codigo de error</a>
             </div>
           </div> 
         <div class="dropdown">
@@ -163,29 +180,41 @@
      <div id="first"><button id="enviar">ENVIAR</button></div>
 
      
-    <div id="second"> <button id="reset">RESET</button></div>
+    <div id="second"> <button id="reset" align="center">RESET</button></div>
      
 
      
      <div>
-     <div id="first"><h3>Entrada</h3></div>
+     <div id="first"><h3 align="center">Entrada</h3></div>
 
      
-    <div id="second"><h3>Salida</h3> </div>
+    <div id="second"><h3 align="center">Salida</h3> </div>
      
      </div>
      
      <div>
      
 
-     <div id="first"><textarea readonly id="mostrarxml" name="mos">
+     <div id="first">
+     <div class="outer">
+    <div class="content" id="mostrarxml">
+
+
+    </div>
+</div>
+     
 
   </textarea></div>
 
      
-    <div id="second"> <textarea readonly id="Salida" name="sa">
+    <div id="second"> 
+    <div class="outer">
+    <div class="content" id="Salida">
 
-  </textarea></div>
+
+    </div>
+</div>
+    </div>
      
      </div>
 

@@ -6,3 +6,9 @@ def index(request):
 
 def Principal(request):
     return render(request, 'Principal.html')
+def fecha(request):
+
+    return render(request, 'fecha.html')
+    
+def codigo(request):
+    return render(request, 'codigo.html')

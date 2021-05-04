@@ -59,6 +59,7 @@ def getsuma():
     
 @app.route('/salida', methods=['POST','GET'])
 def getsalida():
+
     global cadenaxml
     h="d"
     global nomb
@@ -69,6 +70,30 @@ def getsalida():
             leer(cadenaxml)
 
             return Response("Hecho",content_type='application/x-www-form-urlencoded')
+        else:
+            archivo = open("salida.txt", "r", encoding='utf-8')
+            mm = archivo.read()
+            print(mm)
+            
+            return Response(mm,content_type='application/x-www-form-urlencoded')
+@app.route('/codigo', methods=['POST','GET'])
+def getcodigo():
+
+    global cadenaxml
+    h="d"
+    global nomb
+    if h=="d":
+        if request.method=="POST":
+            
+            data = open("codigo.txt", 'w')
+            data.write(request.data.decode('utf-8'))
+            data.close()
+
+            return Response(response=request.data.decode('utf-8'),
+                            mimetype='text/plain',
+                            content_type='text/plain')
+
+            
         else:
             archivo = open("salida.txt", "r", encoding='utf-8')
             mm = archivo.read()
@@ -525,10 +550,10 @@ def estadistica():
     flag=False
     flag2=False
     salida=open("salida.txt","w")
-    salida.write("<Estadisticas>" +'\n')
+    salida.write("<ESTADISTICAS>" +'\n')
     for x in lista_fecha:
         fecha=x.fecha
-        salida.write("  <Estadistica>"+'\n')
+        salida.write("  <ESTADISTICA>"+'\n')
         n = lista_fecha2.count(fecha)
         salida.write("    <FECHA>"+fecha+"</FECHA>"+'\n')
         salida.write("    <CANTIDAD_MENSAJES>"+str(n)+"</CANTIDAD_MENSAJES>"+'\n')
@@ -584,8 +609,8 @@ def estadistica():
         salida.write("    </ERRORES>"+'\n')
         error=[]
         error2=[]
-        salida.write("  </Estadistica>"+'\n')
-    salida.write("</Estadisticas>")
+        salida.write("  </ESTADISTICA>"+'\n')
+    salida.write("</ESTADISTICAS>")
 
     salida.close()
 
