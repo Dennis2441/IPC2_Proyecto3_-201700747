@@ -1,128 +1,12 @@
-from flask import Flask, jsonify, request,Response
-from flask_cors import CORS
-from tkinter import filedialog
-from tkinter import Tk
+import re
 import xml.dom.minidom
-from xml.dom import minidom
-from bs4 import BeautifulSoup
-import types
-from xml.dom.minidom import Node
 from datetime import datetime
 import datetime
-import os
-import re
-cadenaxml=[]
-hola=[]
-app= Flask(__name__)
-CORS(app, resources={r"/*": {"origin": "*"}})
-nomb=" "
-@app.route('/Principal', methods=['GET'])
-def getDatos():
-    return 'Funciona'
 
-@app.route('/suma', methods=['POST','GET'])
-def getsuma():
-    global cadenaxml
-    h="d"
-    global nomb
-    if h=="d":
-        if request.method=="POST":
-
-            Tk().withdraw()
-            filename = filedialog.askopenfilename(initialdir = "/",
-                                                title = "Select un archivo xml",
-                                                filetypes = (("xml files",
-                                                                "*.xml*"),
-                                                            ("all files",
-                                                                "*.*")))
-            print(filename)
-            nomb=filename
-            archivo = open(filename, "r", encoding='utf-8')
-            mm = archivo.read()
-            cadenaxml=mm
-            print(mm)
-            textfile = open("output.txt", 'w')
-            textfile.write(mm)
-            textfile.close()
-
-            
-            
-            return Response("Hecho",content_type='application/x-www-form-urlencoded')
-        elif request.method=="GET":
-            archivo = open("output.txt", "r", encoding='utf-8')
-            mm = archivo.read()
-            print(mm)
-            cadenaxml=mm 
-            return Response(mm,content_type='application/x-www-form-urlencoded')
-        else:
-            return Response("not hecho",content_type='application/x-www-form-urlencoded')
-  
-    
-@app.route('/salida', methods=['POST','GET'])
-def getsalida():
-
-    global cadenaxml
-    h="d"
-    global nomb
-    if h=="d":
-        if request.method=="POST":
-            
-            mm=request.data.decode('utf-8')
-            cadenaxml=mm
-            
-            leer(cadenaxml)
-            estadistica()
-
-            
-
-            return Response("Hecho",content_type='application/x-www-form-urlencoded')
-        else:
-            archivo = open("salida.txt", "r", encoding='utf-8')
-            mm = archivo.read()
-            print(mm)
-            
-            return Response(mm,content_type='application/x-www-form-urlencoded')
-@app.route('/codigo', methods=['POST','GET'])
-def getcodigo():
-
-    global cadenaxml
-    h="d"
-    global nomb
-    if h=="d":
-        if request.method=="POST":
-            
-            data = open("codigo.txt", 'w')
-            data.write(request.data.decode('utf-8'))
-            data.close()
-
-            return Response(response=request.data.decode('utf-8'),
-                            mimetype='text/plain',
-                            content_type='text/plain')
-
-            
-        else:
-            archivo = open("salida.txt", "r", encoding='utf-8')
-            mm = archivo.read()
-            print(mm)
-            
-            return Response(mm,content_type='application/x-www-form-urlencoded')
+inp="""  <?xml version="1.0" encoding="UTF-8"?><EVENTOS>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: bart@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: homero@ing.usac.edu.gt		Usuarios afectados: bart@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20002 - Error de destino, momento equivocado,		lugar equivocado y medios equivocados	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: barni@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt, 		moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: barni@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: lisa@ing.usac.edu.gt		Usuarios afectados: moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20002 - Error de destino, momento equivocado,		lugar equivocado y medios equivocados	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: mrburns@ing.usac.edu.gt		Usuarios afectados: apu@ing.usac.edu.gt, ned@ing.usac.edu.gt,		edna@ing.usac.edu.gt, moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20004 - Demasiados registros enviados,		no hay suficiente espacio de almacenamiento.	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: milhouse@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt,		bart@ing.usac.edu.gt, moe@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: edna@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: bart@ing.usac.edu.gt, lisa@ing.usac.edu.gt,		moe@ing.usac.edu.gt, skinner@ing.usac.edu.gt		Error: 20004 - Demasiados registros enviados,		no hay suficiente espacio de almacenamiento.	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: apu@ing.usac.edu.gt, ned@ing.usac.edu.gt,		edna@ing.usac.edu.gt, moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: lisa@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 15/04/2021		Reportado por: carl092@ing.usac.edu.gt		Usuarios afectados: martin@ing.usac.edu.gt, maggy@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: milhouse@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt,		bart@ing.usac.edu.gt, moe@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: edna@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO></EVENTOS>"""
 
 
 
-
-#--------------------------------------------------------------------------------------------------------------------------
-
-
-
-        
-
-def leer(cadena):
-    
-    analizar(cadena)
-    ordenar()
-    ordenarfecha()
-    for i in lista_Token:
-        print(i.reportado+" "+i.fecha)
 
 
 
@@ -208,7 +92,7 @@ class fechausuario():
 class Fecha():
     def __init__(self ,fecha):
         self.fecha=fecha
-#--------------------------------Funciones--------------------------------------------------------------------------      
+        
 lista_Token=[]
 lista_error=[]
 lista_fecha=[]
@@ -566,10 +450,10 @@ def estadistica():
     flag=False
     flag2=False
     salida=open("salida.txt","w")
-    salida.write("<ESTADISTICAS>" +'\n')
+    salida.write("<Estadisticas>" +'\n')
     for x in lista_fecha:
         fecha=x.fecha
-        salida.write("  <ESTADISTICA>"+'\n')
+        salida.write("  <Estadistica>"+'\n')
         n = lista_fecha2.count(fecha)
         salida.write("    <FECHA>"+fecha+"</FECHA>"+'\n')
         salida.write("    <CANTIDAD_MENSAJES>"+str(n)+"</CANTIDAD_MENSAJES>"+'\n')
@@ -625,9 +509,21 @@ def estadistica():
         salida.write("    </ERRORES>"+'\n')
         error=[]
         error2=[]
-        salida.write("  </ESTADISTICA>"+'\n')
-    salida.write("</ESTADISTICAS>")
+        salida.write("  </Estadistica>"+'\n')
+    salida.write("</Estadisticas>")
 
     salida.close()
-if __name__=='__main__':
-    app.run(host='0.0.0.0', debug=True, port=4000)
+
+    
+
+
+
+        
+                
+analizar(inp)
+ordenar()
+ordenarfecha()
+estadistica()
+for i in lista_Token:
+    print(i.reportado+" "+i.fecha)
+    

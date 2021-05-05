@@ -141,9 +141,12 @@
     </form>
     <button >
     <div id="messages"></div>
+
+    <button id="co">Ver si existe el codigo</button>
     <script>
     let post_form = document.getElementById("post-form");
     let messages = document.getElementById("messages");
+    let button = document.getElementById("co");
     post_form.addEventListener("submit", (e) => {
         e.preventDefault();
         fetch("http://localhost:4000/codigo", {

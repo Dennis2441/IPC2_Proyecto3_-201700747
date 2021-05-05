@@ -4,7 +4,11 @@
 
 <head>
 
-    <title>Prueba</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 3</title>
+    
     <style>
         .navbar {
           overflow: hidden;
@@ -21,6 +25,14 @@
           text-decoration: none;
         }
         .navbar button {
+          float: left;
+          font-size: 16px;
+          color: blue;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+        }
+        .navbar input {
           float: left;
           font-size: 16px;
           color: blue;
@@ -94,12 +106,7 @@
             background-color: green;
         }
 
-        textarea {
-        overflow-y: scroll;
-        height: 500px;
-        width: 500px;
-        resize: none; /* Remove this if you want the user to resize the textarea */
-    }
+        
     
     .clearfix:after {
    content: " "; 
@@ -107,6 +114,12 @@
    display: block;
    height: 0;
    clear: both;
+}
+
+body{
+
+
+  background-color: white;
 }
 
 #first, #second{
@@ -148,9 +161,11 @@
         </style>
 </head>
 <body>
-    
+    <form id="post-form1">
     <div class="navbar">
-        <button id="id_buscar">Cargar Archivo</button>
+        <input type="file" name="inputfile"
+            id="inputfile" accept=".xml">
+        
         <div class="dropdown">
             <button class="dropbtn">Peticiones 
               <i class="fa fa-caret-down"></i>
@@ -177,7 +192,7 @@
      </div>
 
      
-     <div id="first"><button id="enviar">ENVIAR</button></div>
+     <div id="first"><input id="enviar" type="submit"/></div>
 
      
     <div id="second"> <button id="reset" align="center">RESET</button></div>
@@ -201,10 +216,10 @@
 
 
     </div>
-</div>
+    
      
 
-  </textarea></div>
+  </div> </div>
 
      
     <div id="second"> 
@@ -218,55 +233,56 @@
      
      </div>
 
+     <div id="mostrarxml3" style="display: none;"></div>
+<textarea id="mostrarxml2" style="display:none;"></textarea>
 
+</form>
+<script type="text/javascript">
 
+let entrada_xml = document.getElementById("mostrarxml");
+let entrada_xml2 = document.getElementById("mostrarxml2");
+let entrada_xml3 = document.getElementById("mostrarxml3");
 
+       let k=   document.getElementById('inputfile')
+            k.addEventListener('change', function() {
+              
+            var fr=new FileReader();
+            
+            fr.onload=function(){
+                entrada_xml.innerText=fr.result;
+                entrada_xml3.innerText=fr.result;
+                entrada_xml2.innerText=fr.result
+                
+                
+            }
+              
+            fr.readAsText(this.files[0]);
+        })
+    </script>
     
     <script>
        
-       let get_button = document.getElementById("id_buscar");
-       let dato_button = document.getElementById("dato");
-       let entrada_xml = document.getElementById("mostrarxml");
-       let salida_xml = document.getElementById("Salida");
-       let ver_button = document.getElementById("ver");
-       let enviar_button = document.getElementById("enviar");
-        
-
-        get_button.addEventListener("click", (e) => {
+      
+    let post_form1 = document.getElementById("post-form1");
+    let dato_button = document.getElementById("dato");
+    let salida_xml = document.getElementById("Salida");
+    post_form1.addEventListener("submit", (e) => {
         e.preventDefault();
-        fetch("http://localhost:4000/suma", {
+        fetch("http://localhost:4000/salida", {
           method: "POST",
           headers: {
-            'Content-Type':'application/x-www-form-urlencoded'
+            "Content-Type": "text/plain",
           },
+          body: document.getElementById("mostrarxml2").value,
         }).then((res) => {
           if (res.ok) {
-            alert("Carga Completa");
+            alert("Enviado");
+            console.log(tex)
           }
         });
       });
-                
-        ver_button.addEventListener("click", (e) => {
-        e.preventDefault();
-        fetch("http://localhost:4000/suma", {
-          method: "GET",
-          headers: {
-            'Content-Type':'application/x-www-form-urlencoded'
-          },
-        })
-          .then((res) => {
-            if (res.ok) {
 
-              return res.text();
-            }
-          })
-          .then((res_txt) => {
-            entrada_xml.innerText = res_txt;
-            
-          });
-      });
-
-      dato_button.addEventListener("click", (e) => {
+       dato_button.addEventListener("click", (e) => {
         e.preventDefault();
         fetch("http://localhost:4000/salida", {
           method: "GET",
@@ -284,24 +300,6 @@
             salida_xml.innerText = res_txt;
             
           });
-      });
-       
-
-
-       enviar_button.addEventListener("click", (e) => {
-        e.preventDefault();
-        fetch("http://localhost:4000/salida", {
-          method: "POST",
-          headers: {
-            'Content-Type':'application/x-www-form-urlencoded'
-          },
-         
-          
-        }).then((res) => {
-          if (res.ok) {
-            alert("Proceso Enviado");
-          }
-        });
       });
    </script>
 </body>
