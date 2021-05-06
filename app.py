@@ -11,6 +11,7 @@ from datetime import datetime
 import datetime
 import os
 import re
+import matplotlib.pyplot as plot
 cadenaxml=[]
 hola=[]
 app= Flask(__name__)
@@ -68,10 +69,13 @@ def getsalida():
         if request.method=="POST":
             
             mm=request.data.decode('utf-8')
-            cadenaxml=mm
-            
-            leer(cadenaxml)
-            estadistica()
+            if(mm==""):
+                print()
+            else:
+                cadenaxml=mm
+                
+                leer(cadenaxml)
+                estadistica()
 
             
 
@@ -80,6 +84,9 @@ def getsalida():
             archivo = open("salida.txt", "r", encoding='utf-8')
             mm = archivo.read()
             print(mm)
+            textfile = open("Estadistica.xml", 'w')
+            textfile.write(mm)
+            textfile.close()
             
             return Response(mm,content_type='application/x-www-form-urlencoded')
 @app.route('/codigo', methods=['POST','GET'])
@@ -90,10 +97,8 @@ def getcodigo():
     global nomb
     if h=="d":
         if request.method=="POST":
-            
-            data = open("codigo.txt", 'w')
-            data.write(request.data.decode('utf-8'))
-            data.close()
+            mm=request.data.decode('utf-8')
+            print(mm)
 
             return Response(response=request.data.decode('utf-8'),
                             mimetype='text/plain',
@@ -106,7 +111,41 @@ def getcodigo():
             print(mm)
             
             return Response(mm,content_type='application/x-www-form-urlencoded')
+@app.route('/reset', methods=['POST','GET'])
+def getreset():
 
+    global cadenaxml
+    global lista_Token
+    global lista_error
+    global lista_fecha2
+    global lista_fecha
+    global lista_fcu
+    global lista_final
+    h="d"
+    global nomb
+    if h=="d":
+        if request.method=="POST":
+            
+            data = open("salida.txt", 'w').close()
+            data1 = open("codigo.txt", 'w').close()
+            lista_Token=[]
+            lista_error=[]
+            lista_fecha=[]
+            lista_fcu=[]
+            lista_final=[]
+            lista_fecha2=[]
+            
+            
+
+            return Response(response=request.data.decode('utf-8'),
+                            mimetype='text/plain',
+                            content_type='text/plain')
+
+            
+        else:
+            
+            
+            return Response("hecho",content_type='application/x-www-form-urlencoded')
 
 
 
@@ -544,6 +583,9 @@ class err():
     def __init__(self,codigo,numero):
         self.codigo=codigo
         self.numero=numero
+
+
+
 def estadistica():
     global lista_Token
     global lista_fecha
