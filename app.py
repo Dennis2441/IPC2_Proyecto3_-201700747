@@ -8,18 +8,38 @@ from bs4 import BeautifulSoup
 import types
 from xml.dom.minidom import Node
 from datetime import datetime
+import numpy as np
 import datetime
+import plotly.graph_objects as go
 import os
 import re
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 cadenaxml=[]
 hola=[]
 app= Flask(__name__)
 CORS(app, resources={r"/*": {"origin": "*"}})
 nomb=" "
-@app.route('/Principal', methods=['GET'])
+@app.route('/Principal', methods=['POST','GET'])
 def getDatos():
-    return 'Funciona'
+    global cadenaxml
+    h="d"
+    global nomb
+    if h=="d":
+        if request.method=="POST":
+            try:
+                os.remove(r"frontend\assets\bar.png")
+                
+            except:
+                print()
+
+            try:
+               
+                os.remove(r"frontend\assets\user.png")
+            except:
+                print()
+            return Response("Hecho",content_type='application/x-www-form-urlencoded')
+        else:
+            return Response("Hecho",content_type='application/x-www-form-urlencoded')
 
 @app.route('/suma', methods=['POST','GET'])
 def getsuma():
@@ -89,18 +109,26 @@ def getsalida():
             textfile.close()
             
             return Response(mm,content_type='application/x-www-form-urlencoded')
+
 @app.route('/codigo', methods=['POST','GET'])
 def getcodigo():
-
     global cadenaxml
     h="d"
     global nomb
     if h=="d":
         if request.method=="POST":
             mm=request.data.decode('utf-8')
-            print(mm)
+            if(code==[]):
+                mm=""
+            else:
+                graficar1()
+                if(codi.porcodigo(mm)==True):
+                    g(mm)
+                else:
+                    mm="no"
 
-            return Response(response=request.data.decode('utf-8'),
+            
+            return Response(mm,
                             mimetype='text/plain',
                             content_type='text/plain')
 
@@ -120,6 +148,7 @@ def getreset():
     global lista_fecha2
     global lista_fecha
     global lista_fcu
+    global lista_fcu2
     global lista_final
     h="d"
     global nomb
@@ -134,8 +163,14 @@ def getreset():
             lista_fcu=[]
             lista_final=[]
             lista_fecha2=[]
-            
-            
+            lista_fcu=[]
+            code=[]
+            try:
+                os.remove(r"frontend\assets\bar.png")
+                os.remove(r"frontend\assets\user.png")
+            except:
+                print()
+                
 
             return Response(response=request.data.decode('utf-8'),
                             mimetype='text/plain',
@@ -146,7 +181,39 @@ def getreset():
             
             
             return Response("hecho",content_type='application/x-www-form-urlencoded')
+@app.route('/usuario', methods=['POST','GET'])
+def getusuario():
+    global cadenaxml
+    h="d"
+    global lista_fcu2
+    global nomb
+    if h=="d":
+        if request.method=="POST":
+            mm=request.data.decode('utf-8')
+            d = datetime.datetime.strptime(mm, '%Y-%m-%d')
+            fecha=str(d.strftime('%d/%m/%Y'))
+            mm=fecha
+            if(lista_fcu2==[]):
+                mm=""
+            else:
+                graficar2()
+                if(usu.porcodigo(mm)==True):
+                    g2(mm)
+                else:
+                    mm="no"
 
+            
+            return Response(mm,
+                            mimetype='text/plain',
+                            content_type='text/plain')
+
+            
+        else:
+            archivo = open("salida.txt", "r", encoding='utf-8')
+            mm = archivo.read()
+            print(mm)
+            
+            return Response(mm,content_type='application/x-www-form-urlencoded')
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -164,7 +231,229 @@ def leer(cadena):
         print(i.reportado+" "+i.fecha)
 
 
+class user:
+    def __init__(self, fecha=None, usuario=None,  numero=None ,previous = None, next=None):
+        self.fecha = fecha
+        self.usuario = usuario
+        self.numero = numero
+        self.previous = previous
+        self.next = next
 
+class userr:
+    def __init__ (self, head=None):
+        self.head = head
+        self.last = head
+        self.size = 0
+    def vacio(self):
+        val=False
+        if self.head==None:
+            print("Esta Vacio")
+            val=True
+            
+        else:
+            val=False
+        return val
+    def insertar (self, fecha, usuario):
+            if self.size == 0:
+                self.head = user(fecha = fecha, usuario = usuario, numero="1")
+                self.last = self.head
+            else:
+                new_node = user(fecha = fecha, usuario = usuario, numero="1", next=self.head)
+                self.head.previous = new_node
+                self.head = new_node
+            self.size += 1        
+    def buscar(self,fecha,usuario):
+        actual = self.head
+        flag=False
+        while actual != None:
+            if fecha == actual.fecha and usuario==actual.usuario:
+                flag=True
+                return True
+            actual = actual.next
+        return False
+    def eliminar(self):
+        print()
+        if self.vacio():
+            print("vacio")
+        else:
+            node = self.head
+            while self.size!=0:
+                if(self.head != self.last):
+                    self.head=self.head.next
+                    self.head.previous=None
+                    self.size=self.size-1
+                else:
+                    self.head=self.last=None
+                    self.size=self.size-1
+    def imprimir (self):
+        global ejex
+        global ejey
+        if self.head is None:
+            return
+        node = self.head
+        ejex.append(" ")
+        ejey.append("0")
+        print(node.fecha+" : "+node.usuario +" : "+node.numero)
+        ejex.append(node.fecha)
+        ejey.append(node.numero)
+        while node.next:
+            node = node.next
+            print(node.fecha+" : "+node.usuario+" : "+node.numero)
+            ejex.append(node.fecha)
+            ejey.append(node.numero)
+    def update(self,fecha,usuario):
+        actual = self.head
+        
+        
+        while actual != None:
+            if fecha == actual.fecha and usuario==actual.usuario:
+                n=int(actual.numero)
+                n=n+1
+                actual.numero=str(n)
+                return 
+            actual = actual.next
+        return 
+    def g1(self,codigo):
+        global ejex
+        global ejey
+        actual = self.head
+        ejex.append(" ")
+        ejey.append("0")
+        while actual != None:
+            if codigo==actual.codigo:
+                ejex.append(actual.fecha)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
+    def g2(self,fecha):
+        global ejex
+        global ejey
+        actual = self.head
+        ejex.append(" ")
+        ejey.append("0")  
+        while actual != None:
+            if fecha==actual.fecha:
+                ejex.append(actual.usuario)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
+    def porcodigo(self,fecha):
+        actual = self.head
+        flag=False
+        while actual != None:
+            if fecha==actual.fecha:
+                flag=True
+                return True
+            actual = actual.next
+        return False
+
+
+class mistake:
+    def __init__(self, fecha=None, codigo=None,  numero=None ,previous = None, next=None):
+        self.fecha = fecha
+        self.codigo = codigo
+        self.numero = numero
+        self.previous = previous
+        self.next = next
+
+class mistakee:
+    def __init__ (self, head=None):
+        self.head = head
+        self.last = head
+        self.size = 0
+    def vacio(self):
+        val=False
+        if self.head==None:
+            print("Esta Vacio")
+            val=True
+            
+        else:
+            val=False
+        return val
+    def insertar (self, fecha, codigo):
+            if self.size == 0:
+                self.head = mistake(fecha = fecha, codigo = codigo, numero="1")
+                self.last = self.head
+            else:
+                new_node = mistake(fecha = fecha, codigo = codigo, numero="1", next=self.head)
+                self.head.previous = new_node
+                self.head = new_node
+            self.size += 1        
+    def buscar(self,fecha,codigo):
+        actual = self.head
+        flag=False
+        while actual != None:
+            if fecha == actual.fecha and codigo==actual.codigo:
+                flag=True
+                return True
+            actual = actual.next
+        return False
+    def porcodigo(self,codigo):
+        actual = self.head
+        flag=False
+        while actual != None:
+            if codigo==actual.codigo:
+                flag=True
+                return True
+            actual = actual.next
+        return False
+    def g1(self,codigo):
+        global ejex
+        global ejey
+        actual = self.head
+        while actual != None:
+            if codigo==actual.codigo:
+                ejex.append(actual.fecha)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
+    def eliminar(self):
+        print()
+        if self.vacio():
+            print("vacio")
+        else:
+            node = self.head
+            while self.size!=0:
+                if(self.head != self.last):
+                    self.head=self.head.next
+                    self.head.previous=None
+                    self.size=self.size-1
+                else:
+                    self.head=self.last=None
+                    self.size=self.size-1
+    def imprimir (self):
+        global ejex
+        global ejey
+        if self.head is None:
+            return
+        node = self.head
+        ejex.append(" ")
+        ejey.append("0")
+        print(node.fecha+" : "+node.codigo +" : "+node.numero)
+        ejex.append(node.fecha)
+        ejey.append(node.numero)
+        while node.next:
+            node = node.next
+            print(node.fecha+" : "+node.codigo+" : "+node.numero)
+            ejex.append(node.fecha)
+            ejey.append(node.numero)
+    def update(self,fecha,codigo):
+        actual = self.head
+        
+        ejex.append(" ")
+        ejey.append("0")
+        while actual != None:
+            if fecha == actual.fecha and codigo==actual.codigo:
+                n=int(actual.numero)
+                n=n+1
+                actual.numero=str(n)
+                return 
+            actual = actual.next
+        return 
+class err():
+    def __init__(self,codigo,fecha):
+        self.codigo=codigo
+        self.fecha=fecha
 class node_de:
     def __init__(self, fecha=None, Nombre=None,  previous = None, next=None):
         self.fecha = fecha
@@ -253,13 +542,17 @@ lista_error=[]
 lista_fecha=[]
 lista_fcu=[]
 lista_final=[]
-
+lista_fcu2=[]
+code=[]
+ejex=[]
+ejey=[]
 def analizar(cadena):
     global lista_Token
     global lista_error
     global lista_fecha
     global lista_fcu
     global lista_final
+    global code
     strin=""
     char = '' #caracter actual
     next_char = '' #caracter siguiente
@@ -440,6 +733,7 @@ def analizar(cadena):
                         
                     reportado=lexema
                     lista_fcu.append(fechausuario(fecha, reportado))
+                    lista_fcu2.append(fechausuario(fecha, reportado))
                     lexema=""
                 elif(re.search(r'Usuarios afectados', lexema)):
                     print("ok "+ lexema)
@@ -492,7 +786,9 @@ def analizar(cadena):
                 print(lexema)
                 print("error numero :"+ lexema)
                 lista_error.append(lexema)
+                
                 codigo=lexema
+                code.append(err(codigo, fecha))
                 estado=141
                 lexema=""
             print(lexema)
@@ -579,13 +875,96 @@ def ordenarfecha():
     for i in lista_fecha:
         print(i.fecha)
 
-class err():
-    def __init__(self,codigo,numero):
-        self.codigo=codigo
-        self.numero=numero
 
+codi=mistakee()
+def graficar1():
+    global code
+    global ejex
+    global ejey
+    fecha=""
+    codigo=""
+    temp=[]
+    temp.extend(code)
+    code=[]
+    for l in lista_fecha:
+        fe=l.fecha
+        for m in temp:
+            if(fe==m.fecha):
+                cod=m.codigo
+                fee=m.fecha
+                code.append(err(cod, fee))
+    codi.eliminar()
 
-
+    for i in code:
+        codigo=i.codigo
+        fecha=i.fecha
+        if(codi.vacio()):
+            codi.insertar(fecha, codigo)
+        elif(codi.buscar(fecha, codigo)==True):
+            codi.update(fecha, codigo)
+        else:
+            codi.insertar(fecha, codigo)
+    
+def g(codii):
+    global ejex
+    global ejey
+    codi.g1(codii)
+    try:
+        os.remove(r"frontend\assets\bar.png")
+    except:
+        print()
+    fig = go.Figure(
+    data=[go.Bar(x=ejex,y=ejey)],
+    layout_title_text="Busqueda por Codigo: "+codii
+    )
+    fig.write_image(r"frontend\assets\bar.png")
+    
+    ejex=[]
+    ejey=[]
+    
+usu=userr()
+def graficar2():
+    global lista_fcu2
+    global ejex
+    global ejey
+    global lista_fecha
+    
+    fecha=""
+    codigo=""
+    
+    usu.eliminar()
+    
+    if(usu.vacio()):
+        print("yes")
+    for i in lista_fcu2:
+        codigo=i.reportado
+        fecha=i.fecha
+        if(usu.vacio()):
+            usu.insertar(fecha, codigo)
+        elif(usu.buscar(fecha, codigo)==True):
+            usu.update(fecha, codigo)
+        else:
+            usu.insertar(fecha, codigo)
+      
+    
+def g2(codii):
+    global lista_fcu2
+    global ejex
+    global ejey
+    usu.g2(codii)
+    try:
+        os.remove(r"frontend\assets\user.png")
+    except:
+        print()
+    fig2 = go.Figure(
+    data=[go.Bar(x=ejex,y=ejey)],
+    layout_title_text="Usuario Por fecha: "+codii
+    )
+    
+    fig2.write_image(r"frontend\assets\user.png")
+    
+    ejex=[]
+    ejey=[]
 def estadistica():
     global lista_Token
     global lista_fecha

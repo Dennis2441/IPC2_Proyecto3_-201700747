@@ -1,3 +1,4 @@
+{% load static   %}
 <!DOCTYPE html>
 <html lang="es">
 <html>
@@ -127,43 +128,104 @@
     border: 1px solid white;
     float:left;
     width:50%;
-}</style>
+}
+
+</style>
 </head>
 <body>
 <div class="navbar">
         
-        <a href="Principal">Regresar Pagina Principal</a>
-        <a href="">Buscar Por Fecha y Usuario</a>
+        <button id="regresar"  >Regresar Pagina Principal</button>
+        
       </div>
+      <h1>Buscar Por codigo</h1>
     <form id="post-form">
       <input type="text" name="api-info" id="api-info" />
       
       <input type="submit" value="Enviar datos" />
     </form>
-    <button >
-    <div id="messages"></div>
+    
+    
 
-    <button id="co">Ver si existe el codigo</button>
+    
+    <div id="jk">
+    <img src=" {% static  'bar.png' %}" alt="Grafica" width="600" height="600" id="myImageId" onerror='this.style.display = "none"' ></img>
+    </div>
+
+
+    
     <script>
     let post_form = document.getElementById("post-form");
+    let regresar = document.getElementById("regresar");
     let messages = document.getElementById("messages");
     let button = document.getElementById("co");
     post_form.addEventListener("submit", (e) => {
         e.preventDefault();
         fetch("http://localhost:4000/codigo", {
           method: "POST",
+          
+          processData: false, // essential
+          contentType: false,
           headers: {
             "Content-Type": "text/plain",
           },
           body: post_form.elements["api-info"].value,
         }).then((res) => {
-          if (res.ok) {
-            messages.innerText = "OK";
-          }
-        });
+            if (res.ok) {
+              return res.text();
+            }
+          })
+          .then((res_txt) => {
+            if(res_txt==""){
+              alert("Hacer carga Y enviar datos")
+              
+
+            }else if(res_txt=="no"){
+                alert("Codigo No existe")
+                
+                
+
+            }else{
+                alert("Encontrado")
+                var src = "{% static 'bar.png' %}";
+              imageObject = document.getElementById("myImageId");
+              
+              
+              imageObject.src = src; 
+                document.getElementById("myImageId").style.visibility = "visible";
+                location.reload();
+                 
+                
+                
+            }
+              
+            
+            
+            
+          });
+      });
+    regresar.addEventListener("click", (e) => {
+        e.preventDefault();
+        fetch("http://localhost:4000/Principal", {
+          method: "POST",
+          headers: {
+            'Content-Type':'application/x-www-form-urlencoded'
+          },
+        })
+          .then((res) => {
+            if (res.ok) {
+
+              return res.text();
+              
+            }
+          })
+          .then((res_txt) => {
+            
+            history.back()
+          });
       });
 
-
+    
     </script>
     
 </body>

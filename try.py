@@ -2,8 +2,16 @@ import re
 import xml.dom.minidom
 from datetime import datetime
 import datetime
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
+import os
+import plotly.graph_objects as go
+import fitz
 
-inp="""  <?xml version="1.0" encoding="UTF-8"?><EVENTOS>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: bart@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: homero@ing.usac.edu.gt		Usuarios afectados: bart@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20002 - Error de destino, momento equivocado,		lugar equivocado y medios equivocados	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: barni@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt, 		moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: barni@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: lisa@ing.usac.edu.gt		Usuarios afectados: moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20002 - Error de destino, momento equivocado,		lugar equivocado y medios equivocados	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: mrburns@ing.usac.edu.gt		Usuarios afectados: apu@ing.usac.edu.gt, ned@ing.usac.edu.gt,		edna@ing.usac.edu.gt, moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20004 - Demasiados registros enviados,		no hay suficiente espacio de almacenamiento.	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: milhouse@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt,		bart@ing.usac.edu.gt, moe@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: edna@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: bart@ing.usac.edu.gt, lisa@ing.usac.edu.gt,		moe@ing.usac.edu.gt, skinner@ing.usac.edu.gt		Error: 20004 - Demasiados registros enviados,		no hay suficiente espacio de almacenamiento.	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: apu@ing.usac.edu.gt, ned@ing.usac.edu.gt,		edna@ing.usac.edu.gt, moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: Ralph321@ing.usac.edu.gt		Usuarios afectados: lisa@ing.usac.edu.gt		Error: 20003 - Sobrecarga de informacion	</EVENTO>	<EVENTO>		Guatemala, 15/04/2021		Reportado por: carl092@ing.usac.edu.gt		Usuarios afectados: martin@ing.usac.edu.gt, maggy@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO>	<EVENTO>		Guatemala, 30/04/2021		Reportado por: milhouse@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt,		bart@ing.usac.edu.gt, moe@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: edna@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO>	<EVENTO>		Guatemala, 25/04/2021		Reportado por: nelson@ing.usac.edu.gt		Usuarios afectados: moe@ing.usac.edu.gt, bart@ing.usac.edu.gt		Error: 20004 - Peticion no reconocida por el servidor,		not found error.	</EVENTO></EVENTOS>"""
+inp="""  <?xml version="1.0" encoding="UTF-8"?><EVENTOS>	<EVENTOS>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: bart@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO>	<EVENTO>		Guatemala, 20/04/2021		Reportado por: bart@ing.usac.edu.gt		Usuarios afectados: homero@ing.usac.edu.gt, lisa@ing.usac.edu.gt		Error: 20001 - Desbordamiento de b�fer de memoria RAM		en el servidor de correo electr�nico.	</EVENTO></EVENTOS>"""
 
 
 
@@ -63,7 +71,6 @@ class linked_list_de:
                     self.head=self.last=None
                     self.size=self.size-1
 
-
     def imprimir (self):
         global lista_fcu
 
@@ -75,8 +82,121 @@ class linked_list_de:
         while node.next:
             node = node.next
             lista_fcu.append(fechausuario(node.fecha, node.Nombre))
-           
 
+
+class user:
+    def __init__(self, fecha=None, usuario=None,  numero=None ,previous = None, next=None):
+        self.fecha = fecha
+        self.usuario = usuario
+        self.numero = numero
+        self.previous = previous
+        self.next = next
+
+class userr:
+    def __init__ (self, head=None):
+        self.head = head
+        self.last = head
+        self.size = 0
+    def vacio(self):
+        val=False
+        if self.head==None:
+            print("Esta Vacio")
+            val=True
+            
+        else:
+            val=False
+        return val
+    def insertar (self, fecha, usuario):
+            if self.size == 0:
+                self.head = user(fecha = fecha, usuario = usuario, numero="1")
+                self.last = self.head
+            else:
+                new_node = user(fecha = fecha, usuario = usuario, numero="1", next=self.head)
+                self.head.previous = new_node
+                self.head = new_node
+            self.size += 1        
+    def buscar(self,fecha,usuario):
+        actual = self.head
+        flag=False
+        while actual != None:
+            if fecha == actual.fecha and usuario==actual.usuario:
+                flag=True
+                return True
+            actual = actual.next
+        return False
+    def eliminar(self):
+        print()
+        if self.vacio():
+            print("vacio")
+        else:
+            node = self.head
+            while self.size!=0:
+                if(self.head != self.last):
+                    self.head=self.head.next
+                    self.head.previous=None
+                    self.size=self.size-1
+                else:
+                    self.head=self.last=None
+                    self.size=self.size-1
+    def imprimir (self):
+        global ejex
+        global ejey
+        if self.head is None:
+            return
+        node = self.head
+        ejex.append(" ")
+        ejey.append("0")
+        print(node.fecha+" : "+node.usuario +" : "+node.numero)
+        ejex.append(node.fecha)
+        ejey.append(node.numero)
+        while node.next:
+            node = node.next
+            print(node.fecha+" : "+node.usuario+" : "+node.numero)
+            ejex.append(node.fecha)
+            ejey.append(node.numero)
+    def update(self,fecha,usuario):
+        actual = self.head
+        
+        
+        while actual != None:
+            if fecha == actual.fecha and usuario==actual.usuario:
+                n=int(actual.numero)
+                n=n+1
+                actual.numero=str(n)
+                return 
+            actual = actual.next
+        return 
+    def g1(self,codigo):
+        global ejex
+        global ejey
+        actual = self.head
+        ejex.append(" ")
+        ejey.append("0")
+        while actual != None:
+            if codigo==actual.codigo:
+                ejex.append(actual.fecha)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
+    def g2(self,fecha):
+        global ejex
+        global ejey
+        actual = self.head
+        ejex.append(" ")
+        ejey.append("0")  
+        while actual != None:
+            if fecha==actual.fecha:
+                ejex.append(actual.usuario)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
+
+
+
+class err():
+    def __init__(self,codigo,fecha):
+        self.codigo=codigo
+        self.fecha=fecha
 
 class mistake:
     def __init__(self, fecha=None, codigo=None,  numero=None ,previous = None, next=None):
@@ -133,27 +253,56 @@ class mistakee:
                     self.head=self.last=None
                     self.size=self.size-1
     def imprimir (self):
+        global ejex
+        global ejey
         if self.head is None:
             return
         node = self.head
-        print(node.fecha+" : "+node.codigo)
-        
+        ejex.append(" ")
+        ejey.append("0")
+        print(node.fecha+" : "+node.codigo +" : "+node.numero)
+        ejex.append(node.fecha)
+        ejey.append(node.numero)
         while node.next:
             node = node.next
             print(node.fecha+" : "+node.codigo+" : "+node.numero)
+            ejex.append(node.fecha)
+            ejey.append(node.numero)
     def update(self,fecha,codigo):
         actual = self.head
-        flag=False
+        
+        
         while actual != None:
             if fecha == actual.fecha and codigo==actual.codigo:
                 n=int(actual.numero)
                 n=n+1
                 actual.numero=str(n)
-                flag=True
-                return True
+                return 
             actual = actual.next
-        return False
-
+        return 
+    def g1(self,codigo):
+        global ejex
+        global ejey
+        actual = self.head
+        ejex.append(" ")
+        ejey.append("0")
+        while actual != None:
+            if codigo==actual.codigo:
+                ejex.append(actual.fecha)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
+    def g2(self,fecha):
+        global ejex
+        global ejey
+        actual = self.head
+        
+        while actual != None:
+            if fecha==actual.fecha:
+                ejex.append(actual.codigo)
+                ejey.append(actual.numero)  
+            actual = actual.next
+        return 
 class Token():
     def __init__(self ,fecha, nombre, reportado, afectado,codigo,informacion):
         self.fecha=fecha
@@ -176,14 +325,19 @@ lista_Token=[]
 lista_error=[]
 lista_fecha=[]
 lista_fcu=[]
+lista_fcu2=[]
 lista_final=[]
-
+code=[]
+ejex=[]
+ejey=[]
 def analizar(cadena):
     global lista_Token
     global lista_error
     global lista_fecha
     global lista_fcu
+    global lista_fcu2
     global lista_final
+    global code
     strin=""
     char = '' #caracter actual
     next_char = '' #caracter siguiente
@@ -364,6 +518,7 @@ def analizar(cadena):
                         
                     reportado=lexema
                     lista_fcu.append(fechausuario(fecha, reportado))
+                    lista_fcu2.append(fechausuario(fecha, reportado))
                     lexema=""
                 elif(re.search(r'Usuarios afectados', lexema)):
                     print("ok "+ lexema)
@@ -416,7 +571,9 @@ def analizar(cadena):
                 print(lexema)
                 print("error numero :"+ lexema)
                 lista_error.append(lexema)
+                
                 codigo=lexema
+                code.append(err(codigo, fecha))
                 estado=141
                 lexema=""
             print(lexema)
@@ -503,11 +660,8 @@ def ordenarfecha():
     for i in lista_fecha:
         print(i.fecha)
 
-class err():
-    def __init__(self,codigo,numero):
-        self.codigo=codigo
-        self.numero=numero
-codi=mistakee()
+
+
 def estadistica():
     global lista_Token
     global lista_fecha
@@ -596,20 +750,115 @@ def estadistica():
     salida.write("</Estadisticas>")
 
     salida.close()
+codi=mistakee()
+def graficar1(codii):
+    global code
+    global ejex
+    global ejey
+    global lista_fecha
+    temp=[]
+    temp.extend(code)
+    code=[]
+    fecha=""
+    codigo=""
+    for l in lista_fecha:
+        fe=l.fecha
+        for m in temp:
+            if(fe==m.fecha):
+                cod=m.codigo
+                fee=m.fecha
+                code.append(err(cod, fee))
 
+    codi.eliminar()
+
+    if(codi.vacio()):
+        print("yes")
+    for i in code:
+        codigo=i.codigo
+        fecha=i.fecha
+        if(codi.vacio()):
+            codi.insertar(fecha, codigo)
+        elif(codi.buscar(fecha, codigo)==True):
+            codi.update(fecha, codigo)
+        else:
+            codi.insertar(fecha, codigo)
+      
+    codi.g1(codii)
+    try:
+        os.remove(r"frontend\assets\br.png")
+    except:
+        print()
+    fig = go.Figure(
+    data=[go.Bar(x=ejex,y=ejey)],
+    layout_title_text="A Figure Displayed with fig.show()"
+    )
+    
+    fig.write_image(r"frontend\assets\br.png")
+    fig.show()
+    ejex=[]
+    ejey=[]
+
+    
+    
+    
+    
     
 
 
-
-        
+usu=userr()
+def graficar2(codii):
+    global lista_fcu2
+    global ejex
+    global ejey
+    global lista_fecha
+    
+    fecha=""
+    codigo=""
+    
+    usu.eliminar()
+    
+    if(usu.vacio()):
+        print("yes")
+    for i in lista_fcu2:
+        codigo=i.reportado
+        fecha=i.fecha
+        if(usu.vacio()):
+            usu.insertar(fecha, codigo)
+        elif(usu.buscar(fecha, codigo)==True):
+            usu.update(fecha, codigo)
+        else:
+            usu.insertar(fecha, codigo)
+      
+    usu.g2(codii)
+    try:
+        os.remove(r"frontend\assets\user.png")
+    except:
+        print()
+    fig2 = go.Figure(
+    data=[go.Bar(x=ejex,y=ejey)],
+    layout_title_text="Usuario Por fecha: "+codii
+    )
+    
+    fig2.write_image(r"frontend\assets\user.png")
+    fig2.show()
+    ejex=[]
+    ejey=[]
                 
 analizar(inp)
 ordenar()
 ordenarfecha()
 estadistica()
 
+
+h=""
+if(h==""):
+    print()
+    
+
+graficar2("20/04/2021")
 for i in lista_Token:
     print(i.reportado+" "+i.fecha)
 
-codi.imprimir()
+
+
     

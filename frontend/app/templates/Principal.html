@@ -161,7 +161,7 @@ body{
         </style>
 </head>
 <body>
-    <form id="post-form1">
+    
     <div class="navbar">
         <input type="file" name="inputfile"
             id="inputfile" accept=".xml">
@@ -181,15 +181,14 @@ body{
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a href="#">Documentacion</a>
-            <a href="#">Informacion Estudiante</a>
+            <button >Documentacion</button>
+            <button id="jk" onclick="myFunction()">Informacion Estudiante</button>
             
           </div>
         </div> 
       </div>
-     <div>
-     <button id="ver">Mostrar Archivo Cargado</button>
-     </div>
+  <form id="post-form1">
+    
 
      
      <div id="first"><input id="enviar" type="submit"/></div>
@@ -323,6 +322,11 @@ let entrada_xml3 = document.getElementById("mostrarxml3");
             
           });
       });
+
+    function myFunction() {
+      var jk="Dennis Alexander Gamboa Stokes \r\n 201700747 \r\n Introducción a la Programación y Computación 2"
+  alert(jk)
+}
    </script>
 </body>
 </html>
