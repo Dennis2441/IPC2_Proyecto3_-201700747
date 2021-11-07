@@ -12,3 +12,9 @@ def fecha(request):
     
 def codigo(request):
     return render(request, 'codigo.html')
+
+def login(request):
+    return render(request, 'login.html')
+
+def adm(request):
+    return render(request, 'adm.html')

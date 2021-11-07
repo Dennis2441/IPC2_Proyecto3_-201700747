@@ -24,6 +24,10 @@ urlpatterns = [
     
     path('Principal/fecha/',views.fecha),
     
-    path('Principal/codigo/',views.codigo)
+    path('Principal/codigo/',views.codigo),
+
+    path('login/',views.login),
+    
+    path('adm/',views.adm)
 
 ]
